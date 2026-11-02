@@ -1,9 +1,9 @@
-import Link from "next/link"
+import Navbar from "@/components/layout/Navbar"
 
 export default function Page() {
   return (
-    <div className="m-10 text-center">
-fg
+    <div className="text-center">
+      <Navbar />
     </div>
   )
 }
