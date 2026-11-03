@@ -1,19 +1,20 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { authClient } from "@/lib/auth-client"
+import { safeRedirect } from "@/lib/redirect"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { BookOpen, Mail, Lock } from "lucide-react"
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get("redirect") || "/"
+  const redirectTo = safeRedirect(searchParams.get("redirect"))
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -21,7 +22,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
 
   // Handle email/password login
-  async function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.SubmitEvent) {
     e.preventDefault()
     setError("")
     setLoading(true)
@@ -194,5 +195,14 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+// useSearchParams needs a Suspense boundary in the App Router
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   )
 }

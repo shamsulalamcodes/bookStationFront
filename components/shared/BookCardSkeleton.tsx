@@ -3,7 +3,7 @@ export function BookCardSkeleton() {
   return (
     <div className="animate-pulse overflow-hidden rounded-xl border bg-card">
       {/* Image placeholder */}
-      <div className="aspect-[4/3] w-full bg-muted" />
+      <div className="aspect-[3/4] w-full bg-muted" />
       {/* Content placeholder */}
       <div className="space-y-3 p-4">
         <div className="h-5 w-3/4 rounded bg-muted" />

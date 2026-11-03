@@ -1,9 +1,15 @@
-import Navbar from "@/components/layout/Navbar"
+import { HeroSlider } from "@/components/home/HeroSlider"
+import { NewArrivals } from "@/components/home/NewArrivals"
+import { HowItWorks } from "@/components/home/HowItWorks"
+import { TopCategories } from "@/components/home/TopCategories"
 
-export default function Page() {
+export default function HomePage() {
   return (
-    <div className="text-center">
-      <Navbar />
-    </div>
+    <>
+      <HeroSlider />
+      <NewArrivals />
+      <HowItWorks />
+      <TopCategories />
+    </>
   )
 }

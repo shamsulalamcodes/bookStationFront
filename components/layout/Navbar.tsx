@@ -7,17 +7,9 @@ import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
-import {
-  BookOpen,
-  Menu,
-  X,
-  LogOut,
-  User,
-  Sun,
-  Moon,
-} from "lucide-react"
+import { BookOpen, Menu, X, LogOut, User, Sun, Moon } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 // Public links (always shown)
 const publicLinks = [
@@ -38,6 +30,19 @@ export default function Navbar() {
   const router = useRouter()
   const { resolvedTheme, setTheme } = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // Close the avatar dropdown when clicking outside of it
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside)
+    return () => document.removeEventListener("mousedown", onClickOutside)
+  }, [])
 
   const user = session?.user
 
@@ -105,8 +110,12 @@ export default function Navbar() {
 
           {user ? (
             // Logged in: avatar dropdown
-            <div className="relative group">
-              <button className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted">
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen((open) => !open)}
+                aria-label="Open user menu"
+                className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted"
+              >
                 {/* Avatar */}
                 {user.image ? (
                   <img
@@ -122,20 +131,29 @@ export default function Navbar() {
               </button>
 
               {/* Dropdown menu */}
-              <div className="invisible absolute right-0 top-full mt-1 w-56 rounded-xl border bg-popover p-2 opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
+              <div
+                className={cn(
+                  "absolute top-full right-0 mt-1 w-56 rounded-xl border bg-popover p-2 shadow-lg transition-all",
+                  menuOpen ? "visible opacity-100" : "invisible opacity-0"
+                )}
+              >
                 <div className="border-b px-3 py-2">
                   <p className="text-sm font-medium">{user.name}</p>
                   <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
                 <Link
                   href="/profile"
+                  onClick={() => setMenuOpen(false)}
                   className="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted"
                 >
                   <User className="h-4 w-4" />
                   My Profile
                 </Link>
                 <button
-                  onClick={handleLogout}
+                  onClick={() => {
+                    setMenuOpen(false)
+                    handleLogout()
+                  }}
                   className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
                 >
                   <LogOut className="h-4 w-4" />
@@ -253,10 +271,7 @@ export default function Navbar() {
             ) : (
               <div className="flex flex-col gap-2 pt-1">
                 <Link href="/login" onClick={() => setMobileOpen(false)}>
-                  <Button
-                    variant="ghost"
-                    className="w-full cursor-pointer"
-                  >
+                  <Button variant="ghost" className="w-full cursor-pointer">
                     Login
                   </Button>
                 </Link>

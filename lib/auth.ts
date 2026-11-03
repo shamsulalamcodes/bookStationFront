@@ -16,6 +16,7 @@ export const auth = betterAuth({
   // Email + password authentication
   emailAndPassword: {
     enabled: true,
+    autoSignIn: false, // after Register, user goes to the Login page
   },
 
   // Google OAuth login

@@ -1,9 +1,13 @@
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
-import type { Metadata } from 'next';
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
+import Navbar from "@/components/layout/Navbar"
+import Footer from "@/components/layout/Footer"
+import { Toaster } from "@/components/ui/sonner"
+import { cn } from "@/lib/utils"
+import type { Metadata } from "next"
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -11,8 +15,9 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Book Station',
-  description: 'This is your all time desired book hub, you cherished all the time.',
+  title: "BookStation",
+  description:
+    "Your all-time favorite book hub. Add a book, borrow a book, return a book.",
 }
 
 export default function RootLayout({
@@ -24,10 +29,20 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", geist.variable)}
+      className={cn(
+        "antialiased",
+        fontMono.variable,
+        "font-sans",
+        geist.variable
+      )}
     >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body className="flex min-h-screen flex-col">
+        <ThemeProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
