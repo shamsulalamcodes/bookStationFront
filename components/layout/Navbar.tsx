@@ -45,7 +45,7 @@ export default function Navbar() {
   }, [])
 
   const user = session?.user
-
+  console.log(user);
   // Handle logout
   async function handleLogout() {
     try {

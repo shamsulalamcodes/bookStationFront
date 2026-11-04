@@ -9,7 +9,9 @@ const db = client.db()
 
 // BetterAuth server-side configuration
 export const auth = betterAuth({
-  database: mongodbAdapter(db),
+  database: mongodbAdapter(db, {
+    client,
+  }),
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
 

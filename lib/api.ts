@@ -59,7 +59,14 @@ export async function getAllBooks(): Promise<Book[]> {
 // Get the latest 6 books
 export async function getLatestBooks(): Promise<Book[]> {
   const res = await fetch(`${API}/books/latest`, { cache: "no-store" })
-  return parse<Book[]>(res)
+  return res.json()
+  // return parse<Book[]>(res)
+}
+
+export async function getCategories(): Promise<string[]> {
+  const res = await fetch(`${API}/categories`, { cache: "no-store" })
+  return res.json()
+  // return parse<Book[]>(res)
 }
 
 // Get a single book by ID

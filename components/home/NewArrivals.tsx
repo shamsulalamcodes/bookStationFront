@@ -29,7 +29,7 @@ export function NewArrivals() {
       <BookGrid
         books={books}
         loading={loading}
-        skeletonCount={6}
+        skeletonCount={8}
         emptyMessage="No books have been added yet. Be the first to add one!"
       />
 

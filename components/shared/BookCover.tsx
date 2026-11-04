@@ -34,7 +34,6 @@ export function BookCover({
     <img
       src={src}
       alt={alt}
-      loading="lazy"
       onError={() => setFailed(true)}
       // Open Library sends a 1px placeholder when it has no cover
       onLoad={(e) => {
