@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@wrksz/themes/next"
+import { ThemeHotkey } from "@/components/theme-provider"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import { Toaster } from "@/components/ui/sonner"
@@ -37,7 +38,13 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-screen flex-col">
-        <ThemeProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ThemeHotkey />
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />

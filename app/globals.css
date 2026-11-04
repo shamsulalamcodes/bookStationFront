@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Class-based dark mode (next-themes adds the "dark" class to <html>) */
+/* Class-based dark mode (the theme provider adds the "dark" class to <html>) */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

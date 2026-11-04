@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { BookOpen, Menu, X, LogOut, User, Sun, Moon } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useTheme } from "@wrksz/themes/client"
 import { useEffect, useRef, useState } from "react"
 
 // Public links (always shown)
