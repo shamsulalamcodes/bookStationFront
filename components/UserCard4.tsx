@@ -31,12 +31,10 @@ const UserCard = ({ user }: { user: Tuser }) => {
     const router = useRouter()
 
     const handleDelete = async () => {
-        console.log('from delete ', _id);
         const res = await fetch(`http://localhost:5000/users/${_id}`, {
             method: 'DELETE'
         })
         const result = await res.json()
-        console.log(result);
         if (result?.deletedCount > 0) {
             router.refresh()
         }
@@ -44,7 +42,6 @@ const UserCard = ({ user }: { user: Tuser }) => {
 
     const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('from edit ', _id);
         const forms = new FormData(e.currentTarget)
         const up = Object.fromEntries(forms)
 
@@ -54,7 +51,6 @@ const UserCard = ({ user }: { user: Tuser }) => {
             body: JSON.stringify(up)
         })
         const result = await res.json()
-        console.log(result);
         if (result?.modifiedCount > 0) {
             router.refresh()
 
