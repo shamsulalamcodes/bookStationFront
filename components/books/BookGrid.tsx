@@ -8,7 +8,7 @@ export function BookGrid({
   books,
   loading = false,
   emptyMessage = "No books found.",
-  skeletonCount = 8,
+  skeletonCount = books.length || 4,
 }: {
   books: Book[]
   loading?: boolean

@@ -8,7 +8,7 @@ const data = async (): Promise<string[]> => await getCategories();
 
 export async function TopCategories() {
   const categories = await data();
-  console.log("cat ", categories);
+
   const category = [
     { name: categories[0], icon: UserRound },
     { name: categories[1], icon: Briefcase },

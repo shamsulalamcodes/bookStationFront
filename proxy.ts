@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 // Routes that require authentication
-const protectedRoutes = ["/add-book", "/my-books", "/my-borrows", "/profile"]
+const protectedRoutes = ["/add-book", "/my-books", '/books/*', "/my-borrows"]
 
 // Proxy runs before every matched request (replaces middleware in Next.js 16)
 export function proxy(request: NextRequest) {

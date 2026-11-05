@@ -15,7 +15,7 @@ export default function RegisterPage() {
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
-  const [photo, setPhoto] = useState("")
+  const [photo, setPhoto] = useState<File | null>(null)
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [passwordError, setPasswordError] = useState("")
@@ -28,9 +28,39 @@ export default function RegisterPage() {
     return ""
   }
 
+  async function uploadImage(): Promise<string | null> {
+    if (!photo) {
+      toast.error("Please choose a cover image")
+      return null
+    }
+
+    const formData = new FormData()
+    formData.append("image", photo) // photo is now a File here, so no error
+
+    try {
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API}`,
+        { method: "POST", body: formData }
+      )
+      const result = await response.json()
+
+      if (!result.success) {
+        toast.error("Image upload failed")
+        return null
+      }
+      const image = result.data.url
+      return image as string
+    } catch {
+      toast.error("Could not reach the image server. Check your internet.")
+      return null
+    }
+  }
+
   // Handle registration
-  async function handleRegister(e: React.FormEvent) {
+  async function handleRegister(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
+
+    const image = await uploadImage()
 
     // Validate password before submitting
     const pwError = validatePassword(password)
@@ -42,15 +72,9 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      const result = await authClient.signUp.email({
-        name,
-        email,
-        password,
-        image: photo || undefined,
-      })
-
-      if (result.error) {
-        toast.error(result.error.message || "Registration failed")
+      const result = await authClient.signUp.email({ name, email, password, image: image ?? undefined })
+      if (result?.error) {
+        toast.error(result?.error.message || "Registration failed")
       } else {
         toast.success("Account created! Please sign in.")
         router.push("/login")
@@ -128,15 +152,15 @@ export default function RegisterPage() {
 
           {/* Photo URL */}
           <div className="space-y-2">
-            <Label htmlFor="photo">Photo URL (optional)</Label>
+            <Label htmlFor="photo">Upload Image</Label>
             <div className="relative">
               <ImageIcon className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 id="photo"
-                type="url"
-                placeholder="https://example.com/your-photo.jpg"
-                value={photo}
-                onChange={(e) => setPhoto(e.target.value)}
+                type="file"
+                accept="image/*"
+                placeholder="Book Cover"
+                onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
                 className="pl-10"
               />
             </div>

@@ -35,7 +35,7 @@ function headers(token?: string) {
   const h: Record<string, string> = {
     "Content-Type": "application/json",
   }
-  if (token) h["Authorization"] = `Bearer ${token}`
+  if (token) h["authorization"] = `Bearer ${token}`
   return h
 }
 
@@ -87,6 +87,11 @@ export async function addBook(
     image: string
     description: string
     totalCopies: number
+    availableCopies: number
+    addedBy: {
+      name: string
+      email: string
+    }
   }
 ): Promise<Book> {
   const res = await fetch(`${API}/books`, {
@@ -105,12 +110,24 @@ export async function getMyBooks(token: string): Promise<Book[]> {
   return parse<Book[]>(res)
 }
 
+export async function deleteBook(token: string, bookId: string): Promise<void> {
+  const res = await fetch(`${API}/books/${bookId}`, {
+    method: "DELETE",
+    headers: headers(token),
+  })
+  if (!res.ok) {
+    const data = await res.json()
+    throw new Error(data.message || "Something went wrong")
+  }
+}
+
 // ─── Protected: Borrows ───────────────────────────────────────────
 
 // Borrow a book (body: bookId + days)
 export async function borrowBook(
   token: string,
-  body: { bookId: string; days: number }
+  // Book ID, Book Title, Book Image, User Email, Borrow Date, Return Date.
+  body: { bookId: string; title: string, image: string, borrowDate: string, resultDate: string; }
 ): Promise<Borrow> {
   const res = await fetch(`${API}/borrows`, {
     method: "POST",
@@ -122,9 +139,10 @@ export async function borrowBook(
 
 // Get the current user's borrows
 export async function getMyBorrows(token: string): Promise<Borrow[]> {
-  const res = await fetch(`${API}/borrows/mine`, {
+  const res = await fetch(`${API}/borrows`, {
     headers: headers(token),
   })
+  console.log(res);
   return parse<Borrow[]>(res)
 }
 
@@ -133,7 +151,7 @@ export async function returnBook(
   token: string,
   borrowId: string
 ): Promise<Borrow> {
-  const res = await fetch(`${API}/borrows/${borrowId}/return`, {
+  const res = await fetch(`${API}/return/${borrowId}`, {
     method: "PATCH",
     headers: headers(token),
   })

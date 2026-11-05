@@ -7,18 +7,23 @@ import { Button } from "@/components/ui/button"
 import { useSession } from "@/hooks/useSession"
 import { borrowBook } from "@/lib/api"
 import { getAuthToken } from "@/lib/auth-token"
-import { formatDate } from "@/lib/format"
 import { cn } from "@/lib/utils"
+import { ConfirmProvider } from "../shared/ConfirmProvider"
+import { getFutureDateString } from "@/lib/futureDate"
 
 const DAY_OPTIONS = [3, 7, 14]
-
+// { bookId: book?._id, title: book?.title, image: book?.image }
 // Day picker + Borrow button for the Book Details page
 export function BorrowSection({
-  bookId,
+  book,
   availableCopies,
   onBorrowed,
 }: {
-  bookId: string
+  book: {
+    bookId: string
+    title: string
+    image: string
+  }
   availableCopies: number
   onBorrowed: () => void
 }) {
@@ -27,24 +32,28 @@ export function BorrowSection({
   const [days, setDays] = useState(7)
   const [loading, setLoading] = useState(false)
 
+  const borrowDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric", month: "short", day: "numeric",
+  });
+  const resultDate = getFutureDateString(days)
   const notAvailable = availableCopies <= 0
 
   async function handleBorrow() {
     // Logged out: send to login, then come back to this book
     if (!session) {
       toast.info("Please log in to borrow this book")
-      router.push(`/login?redirect=${encodeURIComponent(`/books/${bookId}`)}`)
+      router.push(`/login?redirect=${encodeURIComponent(`/books/${book.bookId}`)}`)
       return
     }
-
     setLoading(true)
     try {
       const token = await getAuthToken()
-      const borrow = await borrowBook(token, { bookId, days })
+      const borrow = await borrowBook(token, { ...book, resultDate, borrowDate })
       toast.success(
-        `Book borrowed! Please return it by ${formatDate(borrow.dueDate)}.`
+        `Book borrowed! Please return it by ${resultDate}.`
       )
       onBorrowed()
+      console.log(token);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not borrow book")
     } finally {
@@ -76,14 +85,16 @@ export function BorrowSection({
         </div>
       </div>
 
-      <Button
-        size="lg"
-        className="w-full cursor-pointer"
-        disabled={notAvailable || loading}
-        onClick={handleBorrow}
-      >
-        {notAvailable ? "Not Available" : loading ? "Borrowing..." : "Borrow"}
-      </Button>
+      <ConfirmProvider>
+        <Button
+          size="lg"
+          className="w-full cursor-pointer"
+          disabled={notAvailable || loading}
+          onClick={handleBorrow}
+        >
+          {notAvailable ? "Not Available" : loading ? "Borrowing..." : "Borrow"}
+        </Button>
+      </ConfirmProvider>
     </div>
   )
 }

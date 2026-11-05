@@ -5,11 +5,13 @@ import { toast } from "sonner"
 import { AuthGuard } from "@/components/auth/AuthGuard"
 import { BorrowCard } from "@/components/borrows/BorrowCard"
 import { SectionHeading } from "@/components/shared/SectionHeading"
+import { useConfirm } from "@/components/shared/ConfirmProvider"
 import { Spinner } from "@/components/shared/Spinner"
 import { getMyBorrows, returnBook, type Borrow } from "@/lib/api"
 import { getAuthToken } from "@/lib/auth-token"
 
 function MyBorrows() {
+  const confirm = useConfirm()
   const [borrows, setBorrows] = useState<Borrow[]>([])
   const [loading, setLoading] = useState(true)
   const [returningId, setReturningId] = useState<string | null>(null)
@@ -39,6 +41,16 @@ function MyBorrows() {
   }, [reloadKey])
 
   async function handleReturn(borrowId: string) {
+    // Ask first. The code below runs only if the user clicks "Yes, return it"
+    const ok = await confirm({
+      title: "Return this book?",
+      description:
+        "It will be marked as returned and become available to others.",
+      confirmText: "Yes, return it",
+      cancelText: "Keep reading",
+    })
+    if (!ok) return
+
     setReturningId(borrowId)
     try {
       const token = await getAuthToken()

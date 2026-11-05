@@ -46,6 +46,8 @@ export default function BookDetailsPage() {
 
   const soldOut = book.availableCopies <= 0
 
+  const bok = { bookId: book?._id, title: book?.title, image: book?.image }
+
   return (
     <section className="mx-auto max-w-5xl px-4 py-12">
       <Link
@@ -100,7 +102,7 @@ export default function BookDetailsPage() {
           </dl>
 
           <BorrowSection
-            bookId={book._id}
+            book={bok}
             availableCopies={book.availableCopies}
             onBorrowed={() =>
               setBook((b) =>

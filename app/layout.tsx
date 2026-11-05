@@ -5,6 +5,7 @@ import { ThemeHotkey } from "@/components/theme-provider"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import { Toaster } from "@/components/ui/sonner"
+import { ConfirmProvider } from "@/components/shared/ConfirmProvider"
 import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
 
@@ -45,10 +46,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ThemeHotkey />
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <Toaster />
+          <ConfirmProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <Toaster />
+          </ConfirmProvider>
         </ThemeProvider>
       </body>
     </html>

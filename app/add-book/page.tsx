@@ -11,11 +11,14 @@ import { Label } from "@/components/ui/label"
 import { addBook } from "@/lib/api"
 import { getAuthToken } from "@/lib/auth-token"
 import { CATEGORIES } from "@/lib/categories"
+import { authClient } from "@/lib/auth-client"
 
 const fieldClass =
   "w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 
 function AddBookForm() {
+
+  const { data: session } = authClient.useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
@@ -44,7 +47,15 @@ function AddBookForm() {
     setLoading(true)
     try {
       const token = await getAuthToken()
-      await addBook(token, { ...form, totalCopies })
+      await addBook(token, {
+        ...form,
+        totalCopies,
+        availableCopies: totalCopies, // a new book starts fully available
+        addedBy: {
+          name: session?.user?.name || "Unknown",
+          email: session?.user?.email || 'Unknown'
+        },
+      })
       toast.success("Book added successfully!")
       router.push("/my-books")
     } catch (err) {
@@ -124,6 +135,7 @@ function AddBookForm() {
           <Input
             id="image"
             type="url"
+            defaultValue="https://dreieck.com/en/wp-content/uploads/sites/2/2023/03/opened-book-06-adding-another-outline-850x638.png"
             placeholder="https://..."
             value={form.image}
             onChange={(e) => update("image", e.target.value)}
