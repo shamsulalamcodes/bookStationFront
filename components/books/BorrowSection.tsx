@@ -8,7 +8,6 @@ import { useSession } from "@/hooks/useSession"
 import { borrowBook } from "@/lib/api"
 import { getAuthToken } from "@/lib/auth-token"
 import { cn } from "@/lib/utils"
-import { ConfirmProvider } from "../shared/ConfirmProvider"
 import { getFutureDateString } from "@/lib/futureDate"
 
 const DAY_OPTIONS = [3, 7, 14]
@@ -53,7 +52,7 @@ export function BorrowSection({
         `Book borrowed! Please return it by ${resultDate}.`
       )
       onBorrowed()
-      console.log(token);
+      router.push('/my-borrows')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not borrow book")
     } finally {
@@ -85,16 +84,14 @@ export function BorrowSection({
         </div>
       </div>
 
-      <ConfirmProvider>
-        <Button
-          size="lg"
-          className="w-full cursor-pointer"
-          disabled={notAvailable || loading}
-          onClick={handleBorrow}
-        >
-          {notAvailable ? "Not Available" : loading ? "Borrowing..." : "Borrow"}
-        </Button>
-      </ConfirmProvider>
+      <Button
+        size="lg"
+        className="w-full cursor-pointer"
+        disabled={notAvailable || loading}
+        onClick={handleBorrow}
+      >
+        {notAvailable ? "Not Available" : loading ? "Borrowing..." : "Borrow"}
+      </Button>
     </div>
   )
 }

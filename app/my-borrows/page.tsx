@@ -24,11 +24,6 @@ function MyBorrows() {
     getAuthToken()
       .then(getMyBorrows)
       .then((data) => {
-        // Show books still borrowed first
-        data.sort(
-          (a, b) =>
-            Number(b.status === "Borrowed") - Number(a.status === "Borrowed")
-        )
         if (!cancelled) setBorrows(data)
       })
       .catch((err) => toast.error(err.message || "Could not load borrows"))

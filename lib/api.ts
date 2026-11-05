@@ -21,11 +21,10 @@ export type Book = {
 export type Borrow = {
   _id: string
   bookId: Book
-  userId: string
   borrowDate: string
-  dueDate: string
-  returnDate: string | null
-  status: "Borrowed" | "Returned"
+  resultDate: string
+  title: string
+  image: string
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────
@@ -142,7 +141,7 @@ export async function getMyBorrows(token: string): Promise<Borrow[]> {
   const res = await fetch(`${API}/borrows`, {
     headers: headers(token),
   })
-  console.log(res);
+
   return parse<Borrow[]>(res)
 }
 
@@ -152,7 +151,7 @@ export async function returnBook(
   borrowId: string
 ): Promise<Borrow> {
   const res = await fetch(`${API}/return/${borrowId}`, {
-    method: "PATCH",
+    method: "DELETE",
     headers: headers(token),
   })
   return parse<Borrow>(res)
