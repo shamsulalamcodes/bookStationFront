@@ -75,11 +75,11 @@ export default function BookDetailsPage() {
               {book.title}
             </h1>
             <p className="mt-1 text-lg text-muted-foreground">
-              by {book.author}
+              by <span className="font-semibold">{book.author}</span>
             </p>
           </div>
 
-          <p className="leading-relaxed">{book.description}</p>
+          <p className="leading-relaxed text-slate-600">{book.description}</p>
 
           <dl className="grid grid-cols-2 gap-4 rounded-xl border bg-card p-4 text-sm">
             <div>
@@ -93,12 +93,12 @@ export default function BookDetailsPage() {
                 {book.availableCopies} of {book.totalCopies}
               </dd>
             </div>
-            <div>
+            {book.createdAt && (<div>
               <dt className="text-muted-foreground">Added on</dt>
               <dd className="text-lg font-semibold">
                 {formatDate(book.createdAt)}
               </dd>
-            </div>
+            </div>)}
           </dl>
 
           <BorrowSection

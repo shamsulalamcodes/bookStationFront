@@ -1,7 +1,7 @@
 // All backend API calls in one place.
 // Base URL comes from the environment variable NEXT_PUBLIC_API_URL.
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+const API = process.env.NEXT_PUBLIC_API_URL
 
 // ─── Types ────────────────────────────────────────────────────────
 

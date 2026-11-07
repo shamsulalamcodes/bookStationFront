@@ -12,6 +12,8 @@ import { addBook } from "@/lib/api"
 import { getAuthToken } from "@/lib/auth-token"
 import { CATEGORIES } from "@/lib/categories"
 import { authClient } from "@/lib/auth-client"
+import { ImageIcon } from "lucide-react"
+import { uploadImage } from "@/lib/utils"
 
 const fieldClass =
   "w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
@@ -21,6 +23,7 @@ function AddBookForm() {
   const { data: session } = authClient.useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [photo, setPhoto] = useState<File | null>(null)
   const [form, setForm] = useState({
     title: "",
     author: "",
@@ -35,8 +38,10 @@ function AddBookForm() {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
+
+    const image = await uploadImage(photo) as string
 
     const totalCopies = Number(form.totalCopies)
     if (!Number.isInteger(totalCopies) || totalCopies < 1) {
@@ -49,12 +54,13 @@ function AddBookForm() {
       const token = await getAuthToken()
       await addBook(token, {
         ...form,
+        image,
         totalCopies,
         availableCopies: totalCopies, // a new book starts fully available
         addedBy: {
-          name: session?.user?.name || "Unknown",
+          name: session?.user?.name || 'Unknown',
           email: session?.user?.email || 'Unknown'
-        },
+        }
       })
       toast.success("Book added successfully!")
       router.push("/my-books")
@@ -128,19 +134,22 @@ function AddBookForm() {
               required
             />
           </div>
+
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="image">Cover Image URL</Label>
-          <Input
-            id="image"
-            type="url"
-            defaultValue="https://dreieck.com/en/wp-content/uploads/sites/2/2023/03/opened-book-06-adding-another-outline-850x638.png"
-            placeholder="https://..."
-            value={form.image}
-            onChange={(e) => update("image", e.target.value)}
-            required
-          />
+          <Label htmlFor="image">Upload Book Cover Image</Label>
+          <div className="relative">
+            <ImageIcon className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              placeholder="Book Cover"
+              onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
+              className="pl-10"
+            />
+          </div>
         </div>
 
         <div className="space-y-2">

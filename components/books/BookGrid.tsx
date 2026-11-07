@@ -1,7 +1,7 @@
 import { BookOpen } from "lucide-react"
-import { BookCard } from "@/components/books/BookCard"
 import { BookCardSkeleton } from "@/components/shared/BookCardSkeleton"
 import type { Book } from "@/lib/api"
+import MyBooksCard from "./MyBooksCard"
 
 // Grid of book cards with loading and empty states
 export function BookGrid({
@@ -15,8 +15,8 @@ export function BookGrid({
   emptyMessage?: string
   skeletonCount?: number
 }) {
-  const gridClass =
-    "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+
+  const gridClass = "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 
   if (loading) {
     return (
@@ -38,10 +38,10 @@ export function BookGrid({
   }
 
   return (
-    <div className={gridClass}>
-      {books.map((book) => (
-        <BookCard key={book._id} book={book} />
-      ))}
+    <div className="">
+      {
+        books.map(book => <MyBooksCard book={book} key={book._id} />)
+      }
     </div>
   )
 }

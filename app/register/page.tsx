@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { BookOpen, Mail, Lock, User, ImageIcon } from "lucide-react"
+import { uploadImage } from "@/lib/utils"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -28,39 +29,12 @@ export default function RegisterPage() {
     return ""
   }
 
-  async function uploadImage(): Promise<string | null> {
-    if (!photo) {
-      toast.error("Please choose a cover image")
-      return null
-    }
-
-    const formData = new FormData()
-    formData.append("image", photo) // photo is now a File here, so no error
-
-    try {
-      const response = await fetch(
-        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API}`,
-        { method: "POST", body: formData }
-      )
-      const result = await response.json()
-
-      if (!result.success) {
-        toast.error("Image upload failed")
-        return null
-      }
-      const image = result.data.url
-      return image as string
-    } catch {
-      toast.error("Could not reach the image server. Check your internet.")
-      return null
-    }
-  }
 
   // Handle registration
   async function handleRegister(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    const image = await uploadImage()
+    const image = await uploadImage(photo)
 
     // Validate password before submitting
     const pwError = validatePassword(password)
