@@ -16,7 +16,7 @@ function MyBooks() {
     getAuthToken()
       .then(getMyBooks)
       .then(setBooks)
-      .catch()
+      .catch((err) => toast.error(err.message || "Could not load your books"))
       .finally(() => setLoading(false))
   }, [])
 

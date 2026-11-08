@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
             }
         ],
     },
+    allowedDevOrigins: [
+        '192.168.0.176',
+        'bookstationed.vercel.app'
+    ],
 }
 
 export default nextConfig

@@ -13,6 +13,7 @@ export const auth = betterAuth({
     client,
   }),
   trustedOrigins: [
+    "https://bookstationed.vercel.app/",
     "http://localhost:3000",
     "http://127.0.0.1:3000"
   ],

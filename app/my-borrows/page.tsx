@@ -26,7 +26,7 @@ function MyBorrows() {
       .then((data) => {
         if (!cancelled) setBorrows(data)
       })
-      .catch()
+      .catch((err) => toast.error(err.message || "Could not load your borrowed books"))
       .finally(() => {
         if (!cancelled) setLoading(false)
       })
