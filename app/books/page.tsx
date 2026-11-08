@@ -76,6 +76,7 @@ function AllBooks() {
       </div>
 
       <BookGrid
+        from={false}
         books={visibleBooks}
         loading={loading}
         emptyMessage="No books match your search."

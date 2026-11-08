@@ -26,6 +26,7 @@ function MyBooks() {
         My Books
       </SectionHeading>
       <BookGrid
+        from={true}
         books={books}
         loading={loading}
         emptyMessage="You have not added any books yet. Use Add Book to share your first one."

@@ -1,15 +1,19 @@
 import { BookOpen } from "lucide-react"
 import { BookCardSkeleton } from "@/components/shared/BookCardSkeleton"
 import type { Book } from "@/lib/api"
+// import MyBooksCard from "./MyBooksCard"
+import { BookCard } from "./BookCard"
 import MyBooksCard from "./MyBooksCard"
 
 // Grid of book cards with loading and empty states
 export function BookGrid({
   books,
+  from,
   loading = false,
   emptyMessage = "No books found.",
   skeletonCount = books.length || 4,
 }: {
+  from: boolean,
   books: Book[]
   loading?: boolean
   emptyMessage?: string
@@ -38,9 +42,16 @@ export function BookGrid({
   }
 
   return (
-    <div className="">
+    <div>
       {
-        books.map(book => <MyBooksCard book={book} key={book._id} />)
+        from ?
+          <div className="">
+            {books.map(book => <MyBooksCard book={book} key={book._id} />)}
+          </div>
+          :
+          <div className={gridClass}>
+            {books.map(book => <BookCard book={book} key={book._id} />)}
+          </div>
       }
     </div>
   )

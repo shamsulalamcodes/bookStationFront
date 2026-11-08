@@ -19,7 +19,7 @@ export function BorrowCard({
   const user = session?.user?.name
 
   return (
-    <article className="flex gap-4 rounded-xl border bg-card p-4 shadow-sm">
+    <article className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm">
       <div className="h-32 w-24 shrink-0 overflow-hidden rounded-lg bg-muted sm:h-36 sm:w-28">
         <BookCover
           src={borrow?.image}
