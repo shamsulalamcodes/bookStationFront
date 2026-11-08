@@ -26,7 +26,7 @@ function MyBorrows() {
       .then((data) => {
         if (!cancelled) setBorrows(data)
       })
-      .catch((err) => toast.error(err.message || "Could not load borrows"))
+      .catch()
       .finally(() => {
         if (!cancelled) setLoading(false)
       })
@@ -52,9 +52,8 @@ function MyBorrows() {
       await returnBook(token, borrowId)
       toast.success("Book returned. Thank you!")
       setReloadKey((k) => k + 1) // reload so the list matches the database
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not return book")
-    } finally {
+    }
+    finally {
       setReturningId(null)
     }
   }

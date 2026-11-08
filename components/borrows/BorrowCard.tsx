@@ -2,8 +2,8 @@ import Link from "next/link"
 import { BookCover } from "@/components/shared/BookCover"
 import { formatDate } from "@/lib/format"
 import type { Borrow } from "@/lib/api"
-import { useSession } from "@/hooks/useSession"
 import { Button } from "../ui/button"
+import { useSession } from "@/hooks/useSession"
 
 // One row in "My Borrows": cover, dates, status badge and Return button
 export function BorrowCard({
@@ -17,7 +17,6 @@ export function BorrowCard({
 }) {
   const { data: session } = useSession()
   const user = session?.user?.name
-
   return (
     <article className="flex items-center gap-4 rounded-xl border bg-card p-4 shadow-sm">
       <div className="h-32 w-24 shrink-0 overflow-hidden rounded-lg bg-muted sm:h-36 sm:w-28">
@@ -32,7 +31,7 @@ export function BorrowCard({
 
         {borrow ? (
           <Link
-            href={`/books/${borrow._id}`}
+            href={`/books/${borrow.bookId}`}
             className="line-clamp-1 text-lg font-semibold hover:underline"
           >
             {borrow?.title}

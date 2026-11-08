@@ -6,8 +6,13 @@ const API = process.env.NEXT_PUBLIC_API_URL
 // ─── Types ────────────────────────────────────────────────────────
 
 export type Book = {
-  _id: string, title?: string, author?: string, category?: string, image: string, description?: string, totalCopies: number, availableCopies?: number, addedBy?: { email: string, name: string }, createdAt?: string
+  _id: string, title: string, author: string, category: string, image: string, description: string, totalCopies: number, availableCopies: number, addedBy: { email: string, name: string }, createdAt: string
 }
+
+export type BookUpdate = Pick<Book, "_id"> &
+  Partial<
+    Pick<Book, "title" | "author" | "category" | "description" | "image" | "totalCopies">
+  >
 
 export type Borrow = {
   _id: string, bookId: Book, borrowDate: string, resultDate: string, title: string, image: string
@@ -131,7 +136,7 @@ export async function getMyBorrows(token: string): Promise<Borrow[]> {
   return parse<Borrow[]>(res)
 }
 
-export async function updateBook(token: string, updatedBody: Book) {
+export async function updateBook(token: string, updatedBody: BookUpdate) {
   const res = await fetch(`${API}/books/${updatedBody?._id}`, {
     method: "PATCH",
     headers: headers(token),

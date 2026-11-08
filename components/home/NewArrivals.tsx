@@ -27,6 +27,7 @@ export function NewArrivals() {
       </SectionHeading>
 
       <BookGrid
+        from={false}
         books={books}
         loading={loading}
         skeletonCount={8}

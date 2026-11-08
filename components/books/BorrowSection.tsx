@@ -8,7 +8,6 @@ import { useSession } from "@/hooks/useSession"
 import { borrowBook } from "@/lib/api"
 import { getAuthToken } from "@/lib/auth-token"
 import { cn } from "@/lib/utils"
-import { getFutureDateString } from "@/lib/futureDate"
 
 const DAY_OPTIONS = [3, 7, 14]
 // { bookId: book?._id, title: book?.title, image: book?.image }
@@ -31,10 +30,6 @@ export function BorrowSection({
   const [days, setDays] = useState(7)
   const [loading, setLoading] = useState(false)
 
-  const borrowDate = new Date().toLocaleDateString("en-US", {
-    year: "numeric", month: "short", day: "numeric",
-  });
-  const resultDate = getFutureDateString(days)
   const notAvailable = availableCopies <= 0
 
   async function handleBorrow() {
@@ -47,9 +42,9 @@ export function BorrowSection({
     setLoading(true)
     try {
       const token = await getAuthToken()
-      const borrow = await borrowBook(token, { ...book, resultDate, borrowDate })
+      await borrowBook(token, { bookId: book.bookId, days })
       toast.success(
-        `Book borrowed! Please return it by ${resultDate}.`
+        `Book borrowed! Please return it within ${days} days.`
       )
       onBorrowed()
       router.push('/my-borrows')

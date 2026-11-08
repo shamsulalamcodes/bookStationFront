@@ -13,7 +13,7 @@ export function BookGrid({
   emptyMessage = "No books found.",
   skeletonCount = books.length || 4,
 }: {
-  from: boolean,
+  from?: boolean, // true on "My Books": shows edit/delete buttons
   books: Book[]
   loading?: boolean
   emptyMessage?: string
