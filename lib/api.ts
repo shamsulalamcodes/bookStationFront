@@ -116,15 +116,15 @@ export async function deleteBook(token: string, bookId: string): Promise<void> {
 // Borrow a book (body: bookId + days)
 export async function borrowBook(
   token: string,
-  // Book ID, Book Title, Book Image, User Email, Borrow Date, Return Date.
-  body: { bookId: string; title: string, image: string, borrowDate: string, resultDate: string; }
-): Promise<Borrow> {
+  // The server sets the dates, title, author and image itself
+  body: { bookId: string; days: number }
+): Promise<{ insertedId: string }> {
   const res = await fetch(`${API}/borrows`, {
     method: "POST",
     headers: headers(token),
     body: JSON.stringify(body),
   })
-  return parse<Borrow>(res)
+  return parse<{ insertedId: string }>(res)
 }
 
 // Get the current user's borrows
