@@ -5,11 +5,11 @@ import { TopCategories } from "@/components/home/TopCategories"
 
 export default function HomePage() {
   return (
-    <>
+    <div>
       <HeroSlider />
       <NewArrivals />
       <HowItWorks />
       <TopCategories />
-    </>
+    </div>
   )
 }
